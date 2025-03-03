@@ -1,5 +1,5 @@
 from flask import Flask
-from app.extensions import migrate, db, csrf, login_manager
+from app.extensions import migrate, db, csrf, login_manager, bootstrap
 from config import BaseConfig
 from flask_cors import CORS
 
@@ -17,6 +17,7 @@ def initialize_plugins(app):
     # Initialize Plugins
     db.init_app(app)
     migrate.init_app(app, db)
+    bootstrap.init_app(app)
     csrf.init_app(app)
     login_manager.init_app(app)
     CORS(app, resources={r"/*": {"origins": "*"}})

@@ -6,26 +6,42 @@ from app.util import verify_pass
 from app.accounts.models import User
 from app.extensions import db
 from app.extensions import login_manager
-# from app.accounts.controllers import list_all_accounts_controller, create_account_controller, retrieve_account_controller, update_account_controller, delete_account_controller
+from app.accounts.controllers import (
+    list_all_accounts_controller,
+    create_account_controller,
+    retrieve_account_controller,
+    update_account_controller,
+    delete_account_controller,
+)
 
-# @accounts_bp.route("/accounts", methods=['GET', 'POST'])
-# def list_create_accounts():
-#     if request.method == 'GET': return list_all_accounts_controller()
-#     if request.method == 'POST': return create_account_controller()
-#     else: return 'Method is Not Allowed'
 
-# @accounts_bp.route("/accounts/<account_id>", methods=['GET', 'PUT', 'DELETE'])
-# def retrieve_update_destroy_account(account_id):
-#     if request.method == 'GET': return retrieve_account_controller(account_id)
-#     if request.method == 'PUT': return update_account_controller(account_id)
-#     if request.method == 'DELETE': return delete_account_controller(account_id)
-#     else: return 'Method is Not Allowed'
-    
+@accounts_bp.route("/accounts", methods=["GET", "POST"])
+def list_create_accounts():
+    if request.method == "GET":
+        return list_all_accounts_controller()
+    if request.method == "POST":
+        return create_account_controller()
+    else:
+        return "Method is Not Allowed"
+
+
+@accounts_bp.route("/accounts/<account_id>", methods=["GET", "PUT", "DELETE"])
+def retrieve_update_destroy_account(account_id):
+    if request.method == "GET":
+        return retrieve_account_controller(account_id)
+    if request.method == "PUT":
+        return update_account_controller(account_id)
+    if request.method == "DELETE":
+        return delete_account_controller(account_id)
+    else:
+        return "Method is Not Allowed"
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.filter(User.id == int(user_id)).first()
 
- 
+
 @accounts_bp.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
@@ -33,7 +49,6 @@ def login():
         return redirect(url_for("home.home"))
     form = LoginForm(request.form)
     if form.validate_on_submit():
-        
         user = User.query.filter_by(username=form.username.data).first()
         if user and verify_pass(form.password.data, user.password):
             login_user(user, remember=form.remember.data)
@@ -84,6 +99,13 @@ def password():
             msg=f"Se ha enviado un correo a {form.email.data} para recuperar password.",
         )
     return render_template("accounts/password.html", form=form)
+
+@accounts_bp.route("/user/<username>")
+def user(username):
+    user = User.query.filter_by(username=username).first()
+    if user:
+        return render_template("accounts/user.html", user=user)
+    return render_template("accounts/user.html", user=None)
 
 @accounts_bp.route("/logout")
 @login_required

@@ -11,6 +11,8 @@ class BaseConfig(object):
     if not SECRET_KEY:
         SECRET_KEY = ''.join(random.choice( string.ascii_lowercase  ) for i in range( 32 ))  
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    DEVELOPMENT = False
+    TESTING = False
 
 class DevelopmentConfig(BaseConfig):
     DEVELOPMENT = True

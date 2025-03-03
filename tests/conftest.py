@@ -1,7 +1,8 @@
 import pytest
-from app import db, create_app
-from app.accounts.models import User
+from app import create_app
+from app.extensions import db
 from config import TestingConfig
+from app.accounts.models import User
 
 
 @pytest.fixture
@@ -12,13 +13,18 @@ def new_user():
                 is_admin=True)
     return user
 
+
 @pytest.fixture
-def test_client():
+def app():
     flask_app = create_app(TestingConfig)
     with flask_app.app_context():
-        with flask_app.test_client() as testing_client:
-            yield testing_client
+        yield flask_app
 
+
+@pytest.fixture
+def test_client(app):
+    with app.test_client() as testing_client:
+        yield testing_client
 
 @pytest.fixture()
 def init_database(test_client):

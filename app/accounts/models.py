@@ -1,7 +1,6 @@
 from flask_login import UserMixin
-from sqlalchemy import inspect
-from datetime import datetime, timezone
-from flask_validator import ValidateEmail, ValidateString, ValidateBoolean
+from datetime import datetime
+from flask_validator import ValidateEmail, ValidateString
 from sqlalchemy.orm import validates
 
 from app.extensions import db
@@ -62,8 +61,10 @@ class User(db.Model, UserMixin):
             setattr(self, property, value)
     
     # How to serialize SqlAlchemy PostgreSQL Query to JSON => https://stackoverflow.com/a/46180522
-    def toDict(self): 
-        return { c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs }
-
+    def to_dict(self): 
+        return {
+            c.name: str(getattr(self, c.name)) for c in self.__table__.columns
+        }
+        
     def __repr__(self):
-        return "<%r>" % self.email
+        return f'<users {self.username}>'

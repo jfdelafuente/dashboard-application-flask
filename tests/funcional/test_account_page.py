@@ -7,6 +7,7 @@ def test_home_page_requires_login(test_client: FlaskClient):
     assert b'Login' in response.data
     assert b'Username' in response.data
     assert b'Password' in response.data
+    assert b"INFOCODE - Login | Orange" in response.data
 
 def test_login_page(test_client: FlaskClient):
     """
@@ -18,6 +19,7 @@ def test_login_page(test_client: FlaskClient):
     assert response.status_code == 200
     assert b'Username' in response.data
     assert b'Password' in response.data
+    assert b"INFOCODE - Login | Orange" in response.data
 
 def test_register_page(test_client: FlaskClient):
     """
@@ -52,3 +54,4 @@ def test_logout_page_requires_login(test_client: FlaskClient):
     assert b'Login' in response.data
     assert b'Username' in response.data
     assert b'Password' in response.data
+    assert b"INFOCODE - Login | Orange" in response.data

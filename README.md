@@ -21,7 +21,7 @@ set FLASK_ENV=development
 
 # Powershell
 $env:FLASK_APP = ".\run.py"
-$env:FLASK_ENV = "Development"
+$env:FLASK_ENV = "Development" - deprecated
 $env:FLASK_DEBUG = "true"
 ```
 

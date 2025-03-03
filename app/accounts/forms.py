@@ -28,7 +28,7 @@ class RegisterForm(FlaskForm):
         "Email Adress", id="email_create", validators=[DataRequired(), Email()]
     )
     password = PasswordField(
-        "Password", id="pwd_create", validators=[DataRequired(), Length(8, 72, message="Field must be at least 8 characters long.")]
+        "Password", id="pwd_create", validators=[DataRequired(), Length(8, 72)]
     )
     confirm_password = PasswordField(
         "Confirm Password",
@@ -46,7 +46,7 @@ class RegisterForm(FlaskForm):
             return False
         user = User.query.filter_by(username=self.username.data).first()
         if user is not None:
-            self.username.errors.append("Username already registered")
+            self.username.errors.append("Username already registered.")
             return False
         user = User.query.filter_by(email=self.email.data).first()
         if user is not None:
